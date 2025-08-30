@@ -21,8 +21,15 @@ export class UsersService {
     return this.users.find(user => user.getEmail() === email);
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  update(email: string, updateUserDto: UpdateUserDto) {
+    const otherUsers = this.users.filter(user => user.getEmail() !== email);
+    const user = this.findOne(email)!;
+
+    user.setEmail(updateUserDto.email ?? user.getEmail());
+    user.setName(updateUserDto.name!);
+
+    otherUsers.push(user);
+
   }
 
   remove(id: number) {

@@ -6,7 +6,7 @@ import type { Response } from 'express';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Post()
   create(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
@@ -22,16 +22,22 @@ export class UsersController {
   @Get(':email')
   findOne(@Param('email') email: string, @Res() res: Response) {
     const user = this.usersService.findOne(email);
-    if(!user){
+    if (!user) {
       throw new NotFoundException('Usuário não encontrado');
 
     }
     return res.json(user);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  @Patch(':email')
+  update(@Param('email') email: string, @Body() updateUserDto: UpdateUserDto, @Res() res: Response) {
+    const user = this.usersService.findOne(email);
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+
+    }
+    this.usersService.update(email, updateUserDto);
+    return res.status(HttpStatus.NO_CONTENT).send();
   }
 
   @Delete(':id')
