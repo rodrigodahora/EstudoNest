@@ -22,17 +22,17 @@ export class UsersService {
   }
 
   update(email: string, updateUserDto: UpdateUserDto) {
-    const otherUsers = this.users.filter(user => user.getEmail() !== email);
     const user = this.findOne(email)!;
 
     user.setEmail(updateUserDto.email ?? user.getEmail());
     user.setName(updateUserDto.name!);
 
-    otherUsers.push(user);
-
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  remove(email: string) {
+    const userIndex = this.users.findIndex((user) => user.getEmail() === email);
+
+    this.users.splice(userIndex, 1);
+
   }
 }
